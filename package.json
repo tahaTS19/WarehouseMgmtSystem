@@ -1,0 +1,20 @@
+{
+  "name": "wms-project",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Warehouse Management System - Monolithic repo (NestJS backend + React frontend)",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,client -c blue,green \"npm run dev --workspace=server\" \"npm run dev --workspace=client\"",
+    "dev:server": "npm run dev --workspace=server",
+    "dev:client": "npm run dev --workspace=client",
+    "install:all": "npm install",
+    "build": "npm run build --workspace=server && npm run build --workspace=client"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}
