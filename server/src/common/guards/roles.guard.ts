@@ -3,12 +3,30 @@ import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { UserRole } from '../../modules/users/entities/user.entity';
 
-// STUB — see roles.guard.spec.ts for expected behavior.
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    throw new Error('Not implemented yet — see roles.guard.spec.ts for expected behavior');
+    // Reads the roles declared via @Roles(...) on the handler (or its
+    // controller class as a fallback) — if a route has no @Roles() at all,
+    // it's open to any authenticated user, so we allow it here.
+    const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(ROLES_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
+    if (!requiredRoles || requiredRoles.length === 0) {
+      return true;
+    }
+
+    const request = context.switchToHttp().getRequest();
+    const user = request.user;
+
+    if (!user) {
+      return false;
+    }
+
+    return requiredRoles.includes(user.role);
   }
 }

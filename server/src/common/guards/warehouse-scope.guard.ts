@@ -1,17 +1,43 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { UserRole } from '../../modules/users/entities/user.entity';
 
-// STUB — see warehouse-scope.guard.spec.ts for expected behavior.
+// The core isolation boundary of the whole system. This must run AFTER a prior
+// step (an interceptor, or logic in the route handler/service) has resolved
+// which resource is being targeted and attached it to the request as
+// `request.resource`, carrying that resource's `companyId` and/or
+// `warehouseId` — whichever applies to the entity being accessed.
 //
-// This guard is the core of the isolation model: it must verify that whatever
-// resource a request is trying to touch (a warehouse, a product, a transaction,
-// etc.) actually belongs to the requesting user's own scope —
-//   - Admin: the resource's company must match the admin's own companyId
-//   - Staff: the resource's warehouse must match the staff's own warehouseId
-// This must be enforced server-side on every relevant route, never left to the
-// frontend to "just not show" restricted data.
+//   - Admin: allowed only if the resource's companyId matches their own companyId
+//   - Staff: allowed only if the resource's warehouseId matches their own warehouseId
+// Any mismatch, missing user, missing role, or missing resource ownership data
+// results in denial — this guard defaults to DENY, never to ALLOW, on anything
+// ambiguous.
 @Injectable()
 export class WarehouseScopeGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
-    throw new Error('Not implemented yet — see warehouse-scope.guard.spec.ts for expected behavior');
+    const request = context.switchToHttp().getRequest();
+    const user = request.user;
+    const resource = request.resource;
+
+    if (!user || !user.role) {
+      return false;
+    }
+
+    if (user.role === UserRole.ADMIN) {
+      if (!resource || !resource.companyId) {
+        return false;
+      }
+      return resource.companyId === user.companyId;
+    }
+
+    if (user.role === UserRole.STAFF) {
+      if (!resource || !resource.warehouseId) {
+        return false;
+      }
+      return resource.warehouseId === user.warehouseId;
+    }
+
+    // Unrecognized role — deny by default.
+    return false;
   }
 }
