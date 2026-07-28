@@ -19,7 +19,9 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async registerCompany(dto: RegisterCompanyDto): Promise<{ accessToken: string }> {
+  async registerCompany(
+    dto: RegisterCompanyDto,
+  ): Promise<{ accessToken: string; user: Record<string, any> }> {
     // Email is globally unique across the whole system, checked up front —
     // outside the transaction, since this is a read-only pre-check, not part
     // of the atomic write itself.
@@ -55,13 +57,18 @@ export class AuthService {
 
       await queryRunner.commitTransaction();
 
-      const accessToken = this.jwtService.sign({
+      const userPayload = {
         userId: savedAdmin.id,
         role: savedAdmin.role,
         companyId: savedAdmin.companyId,
-      });
+      };
 
-      return { accessToken };
+      const accessToken = this.jwtService.sign(userPayload);
+
+      // The token itself lives ONLY in the httpOnly cookie the controller
+      // sets — it is never included in this JSON body. `user` is safe,
+      // non-sensitive info the frontend needs to know who's logged in.
+      return { accessToken, user: userPayload };
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw error;
@@ -70,7 +77,7 @@ export class AuthService {
     }
   }
 
-  async login(dto: LoginDto): Promise<{ accessToken: string }> {
+  async login(dto: LoginDto): Promise<{ accessToken: string; user: Record<string, any> }> {
     // password has `select: false` on the entity, so it must be explicitly
     // requested here — this is the one place in the whole app that's allowed
     // to read it.
@@ -88,19 +95,19 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const payload: Record<string, any> = {
+    const userPayload: Record<string, any> = {
       userId: user.id,
       role: user.role,
     };
 
     if (user.role === UserRole.ADMIN) {
-      payload.companyId = user.companyId;
+      userPayload.companyId = user.companyId;
     } else {
-      payload.warehouseId = user.warehouseId;
+      userPayload.warehouseId = user.warehouseId;
     }
 
-    const accessToken = this.jwtService.sign(payload);
+    const accessToken = this.jwtService.sign(userPayload);
 
-    return { accessToken };
+    return { accessToken, user: userPayload };
   }
 }

@@ -111,9 +111,9 @@ describe('AuthService', () => {
       expect(mockQueryRunner.release).toHaveBeenCalled(); // must release connection even on failure
     });
 
+    //new test logic
     it('should hash the password before storing it — never store it in plain text', async () => {
       mockUserRepository.findOne.mockResolvedValue(null);
-      const hashSpy = jest.spyOn(bcrypt, 'hash');
 
       mockQueryRunner.manager.save
         .mockResolvedValueOnce({ id: 'company-id-1', name: dto.companyName })
@@ -121,10 +121,10 @@ describe('AuthService', () => {
 
       await service.registerCompany(dto as any);
 
-      expect(hashSpy).toHaveBeenCalledWith(dto.password, expect.any(Number));
-      // Confirm the raw password was never passed into the save() call for the user
       const userSaveArg = mockQueryRunner.manager.save.mock.calls[1][0];
+
       expect(userSaveArg.password).not.toBe(dto.password);
+      expect(await bcrypt.compare(dto.password, userSaveArg.password)).toBe(true);
     });
 
     it('should create the User with role=admin, companyId set, and warehouseId null', async () => {
@@ -152,6 +152,25 @@ describe('AuthService', () => {
 
       expect(result).toHaveProperty('accessToken');
       expect(mockJwtService.sign).toHaveBeenCalled();
+    });
+
+    it('should also return a plain "user" object matching the JWT payload (needed since the token itself lives only in an httpOnly cookie, never in the JSON body)', async () => {
+      mockUserRepository.findOne.mockResolvedValue(null);
+      mockQueryRunner.manager.save
+        .mockResolvedValueOnce({ id: 'company-id-1', name: dto.companyName })
+        .mockResolvedValueOnce({
+          id: 'user-id-1',
+          role: UserRole.ADMIN,
+          companyId: 'company-id-1',
+        });
+
+      const result = await service.registerCompany(dto as any);
+
+      expect(result.user).toEqual({
+        userId: 'user-id-1',
+        role: UserRole.ADMIN,
+        companyId: 'company-id-1',
+      });
     });
   });
 
@@ -198,6 +217,26 @@ describe('AuthService', () => {
           companyId: 'company-id-1',
         }),
       );
+    });
+
+    it('should also return a plain "user" object matching the JWT payload on login', async () => {
+      const hashedPassword = await bcrypt.hash(dto.password, 10);
+      mockUserRepository.findOne.mockResolvedValue({
+        id: 'user-id-1',
+        email: dto.email,
+        password: hashedPassword,
+        role: UserRole.ADMIN,
+        companyId: 'company-id-1',
+        warehouseId: null,
+      });
+
+      const result = await service.login(dto as any);
+
+      expect(result.user).toEqual({
+        userId: 'user-id-1',
+        role: UserRole.ADMIN,
+        companyId: 'company-id-1',
+      });
     });
 
     it('should return a JWT with userId, role, and warehouseId in the payload for staff', async () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import LogoutButton from './LogoutButton';
@@ -12,7 +12,7 @@ vi.mock('../../context/AuthContext', () => ({
 describe('LogoutButton', () => {
   it('calls logout() and navigates to /login when clicked', async () => {
     const user = userEvent.setup();
-    const mockLogout = vi.fn();
+    const mockLogout = vi.fn().mockResolvedValue(undefined);
     useAuth.mockReturnValue({ logout: mockLogout });
 
     render(
@@ -27,6 +27,6 @@ describe('LogoutButton', () => {
     await user.click(screen.getByRole('button', { name: /log out/i }));
 
     expect(mockLogout).toHaveBeenCalledTimes(1);
-    expect(screen.getByText('Login Page')).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText('Login Page')).toBeInTheDocument());
   });
 });

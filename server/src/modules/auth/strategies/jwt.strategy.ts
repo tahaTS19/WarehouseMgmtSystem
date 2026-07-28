@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Strategy } from 'passport-jwt';
+import { Request } from 'express';
 import { ConfigService } from '@nestjs/config';
 
 interface JwtPayload {
@@ -8,6 +9,14 @@ interface JwtPayload {
   role: string;
   companyId?: string;
   warehouseId?: string;
+}
+
+// Reads the token from the httpOnly "token" cookie rather than an
+// Authorization header — the frontend never has direct access to this value
+// at all, the browser just sends the cookie automatically on same-site
+// requests (enabled via CORS credentials + `credentials: 'include'` on fetch).
+export function extractJwtFromCookie(req: Request): string | null {
+  return req?.cookies?.token || null;
 }
 
 // Runs automatically whenever JwtAuthGuard protects a route. Passport verifies
@@ -27,7 +36,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: extractJwtFromCookie,
       ignoreExpiration: false,
       secretOrKey: jwtSecret,
     });

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import AuthLayout from './AuthLayout';
-import PasswordInput from '../../components/common/PasswordInput';
+import FormField from '../../components/common/FormField';
 import { useAuth } from '../../context/AuthContext';
 import styles from './AuthForm.module.css';
 
@@ -50,36 +50,27 @@ export default function Login() {
       subtitle="Enter your details to access your dashboard."
     >
       <form className={styles.form} onSubmit={handleSubmit} noValidate>
-        <div className={styles.field}>
-          <label htmlFor="email" className={styles.label}>
-            Email
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
-            value={formData.email}
-            onChange={handleChange}
-          />
-          {errors.email && <span className={styles.error}>{errors.email}</span>}
-        </div>
+        <FormField
+          id="email"
+          name="email"
+          label="Email"
+          type="email"
+          autoComplete="email"
+          value={formData.email}
+          onChange={handleChange}
+          error={errors.email}
+        />
 
-        <div className={styles.field}>
-          <label htmlFor="password" className={styles.label}>
-            Password
-          </label>
-          <PasswordInput
-            id="password"
-            name="password"
-            autoComplete="current-password"
-            className={`${styles.input} ${styles.passwordInput} ${errors.password ? styles.inputError : ''}`}
-            value={formData.password}
-            onChange={handleChange}
-          />
-          {errors.password && <span className={styles.error}>{errors.password}</span>}
-        </div>
+        <FormField
+          id="password"
+          name="password"
+          label="Password"
+          type="password"
+          autoComplete="current-password"
+          value={formData.password}
+          onChange={handleChange}
+          error={errors.password}
+        />
 
         <button type="submit" className={styles.submit} disabled={isSubmitting}>
           {isSubmitting ? 'Signing in…' : 'Sign in'}

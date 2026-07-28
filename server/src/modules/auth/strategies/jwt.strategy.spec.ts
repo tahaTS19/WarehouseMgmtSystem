@@ -1,6 +1,23 @@
 import { Test } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
-import { JwtStrategy } from './jwt.strategy';
+import { JwtStrategy, extractJwtFromCookie } from './jwt.strategy';
+
+describe('extractJwtFromCookie', () => {
+  it('returns the token when the "token" cookie is present', () => {
+    const req = { cookies: { token: 'abc.def.ghi' } } as any;
+    expect(extractJwtFromCookie(req)).toBe('abc.def.ghi');
+  });
+
+  it('returns null when there is no "token" cookie', () => {
+    const req = { cookies: {} } as any;
+    expect(extractJwtFromCookie(req)).toBeNull();
+  });
+
+  it('returns null when there are no cookies at all on the request', () => {
+    const req = {} as any;
+    expect(extractJwtFromCookie(req)).toBeNull();
+  });
+});
 
 describe('JwtStrategy', () => {
   let strategy: JwtStrategy;
