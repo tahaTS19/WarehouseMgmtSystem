@@ -128,7 +128,9 @@ export default function Dashboard() {
 
       <div className={styles.recentSection}>
         <h2 className={styles.chartTitle}>{isAdmin ? 'Recent Transactions' : 'Recent Activity'}</h2>
-        <RecentTable rows={recentRows} />
+        <div className={styles.tableWrap}>
+          <RecentTable rows={recentRows} />
+        </div>
       </div>
     </div>
   );

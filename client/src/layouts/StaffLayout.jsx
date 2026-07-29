@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { LayoutDashboard, Package, ArrowLeftRight, History, UserCircle } from 'lucide-react';
+import { LayoutDashboard, Package, ArrowLeftRight, History, UserCircle, Menu } from 'lucide-react';
 import LogoutButton from '../components/common/LogoutButton';
 import styles from './StaffLayout.module.css';
 
@@ -13,15 +14,35 @@ const NAV_ITEMS = [
 ];
 
 export default function StaffLayout() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <div className={styles.shell}>
       <aside className={styles.sidebar}>
-        <div className={styles.brand}>WMS</div>
-        <nav className={styles.nav}>
+        <div className={styles.sidebarTop}>
+          <div className={styles.brand}>WMS</div>
+          <button
+            type="button"
+            className={styles.menuToggle}
+            aria-label="Toggle navigation menu"
+            aria-expanded={isMenuOpen}
+            aria-controls="staff-nav-panel"
+            onClick={() => setIsMenuOpen((open) => !open)}
+          >
+            <Menu size={22} strokeWidth={2} aria-hidden="true" />
+          </button>
+        </div>
+
+        <nav
+          id="staff-nav-panel"
+          className={isMenuOpen ? `${styles.nav} ${styles.navOpen}` : styles.nav}
+        >
           {NAV_ITEMS.map(({ to, label, icon: Icon }) => (
             <NavLink
               key={to}
               to={to}
+              aria-label={label}
+              onClick={() => setIsMenuOpen(false)}
               className={({ isActive }) =>
                 isActive ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink
               }
@@ -30,10 +51,10 @@ export default function StaffLayout() {
               <span>{label}</span>
             </NavLink>
           ))}
+          <div className={styles.sidebarFooter}>
+            <LogoutButton />
+          </div>
         </nav>
-        <div className={styles.sidebarFooter}>
-          <LogoutButton />
-        </div>
       </aside>
       <main className={styles.content}>
         <Outlet />
