@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 // Feature modules will be imported here as we build them, e.g.:
-// import { AuthModule } from './modules/auth/auth.module';
+import { AuthModule } from './modules/auth/auth.module';
 // import { WarehousesModule } from './modules/warehouses/warehouses.module';
 // import { UsersModule } from './modules/users/users.module';
 // import { ProductsModule } from './modules/products/products.module';
@@ -33,7 +33,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
 
     // Feature modules go here as they're built, sprint by sprint:
-    // AuthModule,
+    AuthModule,
     // WarehousesModule,
     // UsersModule,
     // ProductsModule,
