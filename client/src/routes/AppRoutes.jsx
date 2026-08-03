@@ -2,7 +2,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from '../pages/auth/Login';
 import Register from '../pages/auth/Register';
 import ProtectedRoute from './ProtectedRoute';
-import DashboardPlaceholder from '../pages/dashboard/DashboardPlaceholder';
+import RoleLayout from '../layouts/RoleLayout';
+import Dashboard from '../pages/dashboard/Dashboard';
 
 export default function AppRoutes() {
   return (
@@ -11,10 +12,13 @@ export default function AppRoutes() {
       <Route path="/register" element={<Register />} />
 
       {/* Any route nested under this element is guarded by ProtectedRoute.
-          Week 2 adds Warehouses/Products/Categories/etc here — they just
-          need to be nested, no per-route wrapping required. */}
+          RoleLayout picks AdminLayout vs StaffLayout based on role, so
+          Week 2 additions (Warehouses/Products/Categories/etc) just nest
+          here too — same flat paths, same guard, same layout switch. */}
       <Route element={<ProtectedRoute />}>
-        <Route path="/dashboard" element={<DashboardPlaceholder />} />
+        <Route element={<RoleLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
       </Route>
 
       <Route path="*" element={<Navigate to="/login" replace />} />
