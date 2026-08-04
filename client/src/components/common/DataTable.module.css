@@ -1,0 +1,75 @@
+.tableWrap {
+  overflow-x: auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+}
+
+.table th {
+  text-align: left;
+  color: var(--color-ink-soft);
+  font-weight: 600;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-ink);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.actionsHeader,
+.actionsCell {
+  text-align: right;
+  width: 1%;
+  white-space: nowrap;
+}
+
+.status {
+  font-family: var(--font-body);
+  color: var(--color-ink-soft);
+  padding: var(--space-6);
+  text-align: center;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-8);
+  text-align: center;
+  color: var(--color-ink-soft);
+  font-family: var(--font-body);
+}
+
+.emptyActionButton {
+  background: var(--color-primary);
+  color: var(--color-surface);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.emptyActionButton:hover {
+  background: var(--color-primary-hover);
+}
