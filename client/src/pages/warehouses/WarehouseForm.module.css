@@ -30,6 +30,7 @@
 }
 
 .select {
+  width: 100%;
   font-family: var(--font-body);
   font-size: 0.9375rem;
   color: var(--color-ink);
@@ -53,6 +54,9 @@
 }
 
 .cancelButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
@@ -68,6 +72,9 @@
 }
 
 .submitButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: var(--color-primary);
   color: var(--color-surface);
   border: none;
@@ -92,4 +99,52 @@
   font-family: var(--font-body);
   color: var(--color-ink-soft);
   padding: var(--space-6);
+}
+
+/* ---- Mobile: desktop layout stays untouched above this point ---- */
+@media (max-width: 640px) {
+  .page {
+    max-width: 100%;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  /* Desktop's generous padding eats too much of a 375px screen — tighten
+     it and drop the border-radius a notch so the card doesn't look like
+     it's floating with awkward margins on all sides. */
+  .form {
+    padding: var(--space-4);
+    gap: var(--space-4);
+    border-radius: var(--radius-sm);
+  }
+
+  .select {
+    min-height: 44px;
+  }
+
+  /* Two inline buttons crammed to the right is the "unclean" part on a
+     narrow screen — stack them full-width instead, primary action on top
+     since that's the thumb-natural position, Cancel demoted to a plain
+     text-style link below it rather than competing visually. */
+  .actionsRow {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: var(--space-2);
+    margin-top: 0;
+  }
+
+  .cancelButton {
+    border: none;
+    text-decoration: underline;
+    padding: var(--space-2);
+  }
+
+  .cancelButton,
+  .submitButton {
+    width: 100%;
+    min-height: 44px;
+    font-size: 1rem;
+  }
 }

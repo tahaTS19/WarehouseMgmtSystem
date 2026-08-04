@@ -58,9 +58,14 @@ export default function WarehousesList() {
     <div className={styles.page}>
       <div className={styles.header}>
         <h1 className={styles.title}>Warehouses</h1>
-        <button type="button" className={styles.addButton} onClick={() => navigate('/warehouses/new')}>
-          <Plus size={18} strokeWidth={2} aria-hidden="true" />
-          Add Warehouse
+        <button
+          type="button"
+          className={styles.addButton}
+          aria-label="Add Warehouse"
+          onClick={() => navigate('/warehouses/new')}
+        >
+          <Plus size={20} strokeWidth={2} aria-hidden="true" />
+          <span className={styles.addButtonLabel}>Add Warehouse</span>
         </button>
       </div>
 

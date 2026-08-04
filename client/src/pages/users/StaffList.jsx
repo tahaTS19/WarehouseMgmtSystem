@@ -68,9 +68,14 @@ export default function StaffList() {
     <div className={styles.page}>
       <div className={styles.header}>
         <h1 className={styles.title}>Staff</h1>
-        <button type="button" className={styles.addButton} onClick={() => navigate('/employees/new')}>
-          <Plus size={18} strokeWidth={2} aria-hidden="true" />
-          Add Staff
+        <button
+          type="button"
+          className={styles.addButton}
+          aria-label="Add Staff"
+          onClick={() => navigate('/employees/new')}
+        >
+          <Plus size={20} strokeWidth={2} aria-hidden="true" />
+          <span className={styles.addButtonLabel}>Add Staff</span>
         </button>
       </div>
 

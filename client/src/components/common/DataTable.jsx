@@ -1,9 +1,13 @@
+import { useIsMobile } from './useIsMobile';
 import styles from './DataTable.module.css';
 
 /**
  * columns: [{ key, header, render?(row) }]
  * rows: array of objects, each needs an `id`
- * renderActions?(row): JSX for an actions cell (edit/delete buttons etc.)
+ * renderActions?(row): JSX for row actions (edit/delete buttons etc.)
+ * titleKey?: which column's value becomes the card's title on mobile —
+ *   defaults to the first column. Every other column renders as a
+ *   label:value row inside the card.
  */
 export default function DataTable({
   columns,
@@ -13,7 +17,10 @@ export default function DataTable({
   emptyActionLabel,
   onEmptyAction,
   renderActions,
+  titleKey,
 }) {
+  const isMobile = useIsMobile();
+
   if (isLoading) {
     return <p className={styles.status}>Loading…</p>;
   }
@@ -28,6 +35,39 @@ export default function DataTable({
           </button>
         )}
       </div>
+    );
+  }
+
+  if (isMobile) {
+    const effectiveTitleKey = titleKey ?? columns[0]?.key;
+    const titleColumn = columns.find((col) => col.key === effectiveTitleKey);
+    const detailColumns = columns.filter((col) => col.key !== effectiveTitleKey);
+
+    return (
+      <ul className={styles.cardList}>
+        {rows.map((row) => (
+          <li key={row.id} className={styles.card}>
+            <div className={styles.cardTitle}>
+              {titleColumn?.render ? titleColumn.render(row) : row[effectiveTitleKey]}
+            </div>
+
+            {detailColumns.length > 0 && (
+              <div className={styles.cardDetails}>
+                {detailColumns.map((col) => (
+                  <div key={col.key} className={styles.cardRow}>
+                    <span className={styles.cardLabel}>{col.header}</span>
+                    <span className={styles.cardValue}>
+                      {col.render ? col.render(row) : row[col.key]}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {renderActions && <div className={styles.cardActions}>{renderActions(row)}</div>}
+          </li>
+        ))}
+      </ul>
     );
   }
 
