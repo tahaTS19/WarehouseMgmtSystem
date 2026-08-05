@@ -17,29 +17,53 @@ export class WarehousesService {
       ...createDto,
       companyId,
     });
+
     return this.warehouseRepository.save(warehouse);
   }
 
-  async findAllByCompany(companyId: string): Promise<Warehouse[]> {
-    return this.warehouseRepository.find({
-      where: { companyId },
-      order: { createdAt: 'DESC' },
-    });
+  async findAllByCompany(
+    companyId: string,
+    search?: string,
+  ): Promise<Warehouse[]> {
+    const query = this.warehouseRepository
+      .createQueryBuilder('warehouse')
+      .where('warehouse.companyId = :companyId', { companyId });
+
+    if (search?.trim()) {
+      query.andWhere(
+        '(warehouse.name ILIKE :search OR warehouse.location ILIKE :search)',
+        {
+          search: `%${search.trim()}%`,
+        },
+      );
+    }
+
+    return query
+      .orderBy('warehouse.createdAt', 'DESC')
+      .getMany();
   }
 
   async findOne(companyId: string, id: string): Promise<Warehouse> {
     const warehouse = await this.warehouseRepository.findOne({
       where: { id, companyId },
     });
+
     if (!warehouse) {
       throw new NotFoundException(`Warehouse with ID ${id} not found.`);
     }
+
     return warehouse;
   }
 
-  async update(companyId: string, id: string, updateDto: UpdateWarehouseDto): Promise<Warehouse> {
+  async update(
+    companyId: string,
+    id: string,
+    updateDto: UpdateWarehouseDto,
+  ): Promise<Warehouse> {
     const warehouse = await this.findOne(companyId, id);
+
     Object.assign(warehouse, updateDto);
+
     return this.warehouseRepository.save(warehouse);
   }
 

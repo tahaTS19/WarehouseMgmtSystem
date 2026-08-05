@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Query } from '@nestjs/common';
 import { Request } from 'express';
 import { UsersService } from './users.service';
 import { CreateStaffDto } from './dto/create-user.dto';
 import { UpdateStaffDto } from './dto/update-user.dto';
+import { QueryUsersDto } from './dto/query-users.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
@@ -22,9 +23,17 @@ export class UsersController {
 
   @Get()
   @Roles(UserRole.ADMIN)
-  findAll(@Req() req: Request) {
+  findAll(
+    @Req() req: Request,
+    @Query() query: QueryUsersDto,
+  ) {
     const user = req.user as any;
-    return this.usersService.findAllByCompany(user.companyId);
+
+    return this.usersService.findAllByCompany(
+      user.companyId,
+      query.search,
+      query.warehouseId,
+    );
   }
 
   @Get(':id')

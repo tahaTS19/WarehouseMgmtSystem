@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Query } from '@nestjs/common';
 import { Request } from 'express';
 import { WarehousesService } from './warehouses.service';
 import { CreateWarehouseDto } from './dto/create-warehouse.dto';
 import { UpdateWarehouseDto } from './dto/update-warehouse.dto';
+import { QueryWarehousesDto } from './dto/query-warehouses.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
@@ -22,9 +23,15 @@ export class WarehousesController {
 
   @Get()
   @Roles(UserRole.ADMIN)
-  findAll(@Req() req: Request) {
+  findAll(
+    @Req() req: Request,
+    @Query() query: QueryWarehousesDto,
+  ) {
     const user = req.user as any;
-    return this.warehousesService.findAllByCompany(user.companyId);
+    return this.warehousesService.findAllByCompany(
+      user.companyId,
+      query.search,
+    );
   }
 
   @Get(':id')

@@ -21,38 +21,64 @@ export class UsersService {
     const warehouse = await this.warehouseRepository.findOne({
       where: { id: dto.warehouseId, companyId: adminCompanyId },
     });
+
     if (!warehouse) {
       throw new ForbiddenException('Target warehouse does not belong to your company.');
     }
 
     // 2. Check globally unique email constraint
-    const existing = await this.userRepository.findOne({ where: { email: dto.email } });
+    const existing = await this.userRepository.findOne({
+      where: { email: dto.email },
+    });
+
     if (existing) {
       throw new ConflictException('Email address already registered.');
     }
 
-    // 3. Hash password & enforce DB constraint (companyId MUST be null for staff)
+    // 3. Hash password & enforce DB constraint
     const hashedPassword = await bcrypt.hash(dto.password, 10);
+
     const user = this.userRepository.create({
       ...dto,
-      companyId: null, // satisfies CHK_dd93dacf1db5fe8164454db4d4 constraint
+      companyId: null,
       role: UserRole.STAFF,
       password: hashedPassword,
     });
 
     const savedUser = await this.userRepository.save(user);
     const { password, ...result } = savedUser;
+
     return result;
   }
 
-  async findAllByCompany(companyId: string): Promise<User[]> {
-    return this.userRepository
+  async findAllByCompany(
+    companyId: string,
+    search?: string,
+    warehouseId?: string,
+  ): Promise<User[]> {
+    const query = this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.warehouse', 'warehouse')
-      .where('warehouse.companyId = :companyId', { companyId })
-      .orWhere('user.companyId = :companyId', { companyId })
-      .orderBy('user.createdAt', 'DESC')
-      .getMany();
+      .where('(warehouse.companyId = :companyId OR user.companyId = :companyId)', {
+        companyId,
+      });
+
+    if (search?.trim()) {
+      query.andWhere(
+        '(user.name ILIKE :search OR user.email ILIKE :search)',
+        {
+          search: `%${search.trim()}%`,
+        },
+      );
+    }
+
+    if (warehouseId) {
+      query.andWhere('user.warehouseId = :warehouseId', {
+        warehouseId,
+      });
+    }
+
+    return query.orderBy('user.createdAt', 'DESC').getMany();
   }
 
   async findOne(companyId: string, id: string): Promise<User> {
@@ -60,40 +86,58 @@ export class UsersService {
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.warehouse', 'warehouse')
       .where('user.id = :id', { id })
-      .andWhere('(user.companyId = :companyId OR warehouse.companyId = :companyId)', { companyId })
+      .andWhere(
+        '(user.companyId = :companyId OR warehouse.companyId = :companyId)',
+        { companyId },
+      )
       .getOne();
 
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found.`);
     }
+
     return user;
   }
 
-  async updateStaff(companyId: string, id: string, dto: UpdateStaffDto): Promise<User> {
+  async updateStaff(
+    companyId: string,
+    id: string,
+    dto: UpdateStaffDto,
+  ): Promise<User> {
     const user = await this.findOne(companyId, id);
 
     if (user.role === UserRole.ADMIN) {
-      throw new ForbiddenException('Cannot edit Admin details via staff management.');
+      throw new ForbiddenException(
+        'Cannot edit Admin details via staff management.',
+      );
     }
 
     if (dto.warehouseId && dto.warehouseId !== user.warehouseId) {
       const warehouse = await this.warehouseRepository.findOne({
         where: { id: dto.warehouseId, companyId },
       });
+
       if (!warehouse) {
-        throw new ForbiddenException('Target warehouse does not belong to your company.');
+        throw new ForbiddenException(
+          'Target warehouse does not belong to your company.',
+        );
       }
     }
 
     Object.assign(user, dto);
+
     return this.userRepository.save(user);
   }
 
   async removeStaff(companyId: string, id: string): Promise<void> {
     const user = await this.findOne(companyId, id);
+
     if (user.role === UserRole.ADMIN) {
-      throw new ForbiddenException('Cannot delete company Admin via staff endpoint.');
+      throw new ForbiddenException(
+        'Cannot delete company Admin via staff endpoint.',
+      );
     }
+
     await this.userRepository.remove(user);
   }
 }
