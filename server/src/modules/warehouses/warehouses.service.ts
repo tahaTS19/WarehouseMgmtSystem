@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Warehouse } from './entities/warehouse.entity';
-import { CreateWarehouseDto } from './dto/create-warehouse.dto';
-import { UpdateWarehouseDto } from './dto/update-warehouse.dto';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Warehouse } from "./entities/warehouse.entity";
+import { CreateWarehouseDto } from "./dto/create-warehouse.dto";
+import { UpdateWarehouseDto } from "./dto/update-warehouse.dto";
+import { PaginatedResponse } from "../../common/interfaces/paginated-response.interface";
 
 @Injectable()
 export class WarehousesService {
@@ -12,7 +13,10 @@ export class WarehousesService {
     private readonly warehouseRepository: Repository<Warehouse>,
   ) {}
 
-  async create(companyId: string, createDto: CreateWarehouseDto): Promise<Warehouse> {
+  async create(
+    companyId: string,
+    createDto: CreateWarehouseDto,
+  ): Promise<Warehouse> {
     const warehouse = this.warehouseRepository.create({
       ...createDto,
       companyId,
@@ -24,23 +28,40 @@ export class WarehousesService {
   async findAllByCompany(
     companyId: string,
     search?: string,
-  ): Promise<Warehouse[]> {
+    page = 1,
+    limit = 10,
+    all = false,
+  ): Promise<PaginatedResponse<Warehouse> | Warehouse[]> {
     const query = this.warehouseRepository
-      .createQueryBuilder('warehouse')
-      .where('warehouse.companyId = :companyId', { companyId });
+      .createQueryBuilder("warehouse")
+      .where("warehouse.companyId = :companyId", { companyId });
 
     if (search?.trim()) {
       query.andWhere(
-        '(warehouse.name ILIKE :search OR warehouse.location ILIKE :search)',
+        "(warehouse.name ILIKE :search OR warehouse.location ILIKE :search)",
         {
           search: `%${search.trim()}%`,
         },
       );
     }
 
-    return query
-      .orderBy('warehouse.createdAt', 'DESC')
-      .getMany();
+    query.orderBy("warehouse.createdAt", "DESC");
+
+    if (all) {
+      return query.getMany();
+    }
+
+    query.skip((page - 1) * limit).take(limit);
+
+    const [data, total] = await query.getManyAndCount();
+
+    return {
+      data,
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async findOne(companyId: string, id: string): Promise<Warehouse> {

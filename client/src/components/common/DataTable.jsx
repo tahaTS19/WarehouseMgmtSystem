@@ -1,5 +1,5 @@
-import { useIsMobile } from './useIsMobile';
-import styles from './DataTable.module.css';
+import { useIsMobile } from "./useIsMobile";
+import styles from "./DataTable.module.css";
 
 /**
  * columns: [{ key, header, render?(row) }]
@@ -18,6 +18,9 @@ export default function DataTable({
   onEmptyAction,
   renderActions,
   titleKey,
+  page,
+  totalPages,
+  onPageChange,
 }) {
   const isMobile = useIsMobile();
 
@@ -29,8 +32,13 @@ export default function DataTable({
     return (
       <div className={styles.emptyState}>
         <p>{emptyMessage}</p>
+
         {onEmptyAction && emptyActionLabel && (
-          <button type="button" className={styles.emptyActionButton} onClick={onEmptyAction}>
+          <button
+            type="button"
+            className={styles.emptyActionButton}
+            onClick={onEmptyAction}
+          >
             {emptyActionLabel}
           </button>
         )}
@@ -38,61 +46,112 @@ export default function DataTable({
     );
   }
 
+  const pagination =
+    totalPages > 1 ? (
+      <div className={styles.pagination}>
+        <button
+          type="button"
+          className={styles.pageButton}
+          disabled={page === 1}
+          onClick={() => onPageChange(page - 1)}
+        >
+          Previous
+        </button>
+
+        <span className={styles.pageInfo}>
+          Page {page} of {totalPages}
+        </span>
+
+        <button
+          type="button"
+          className={styles.pageButton}
+          disabled={page === totalPages}
+          onClick={() => onPageChange(page + 1)}
+        >
+          Next
+        </button>
+      </div>
+    ) : null;
+
   if (isMobile) {
     const effectiveTitleKey = titleKey ?? columns[0]?.key;
     const titleColumn = columns.find((col) => col.key === effectiveTitleKey);
-    const detailColumns = columns.filter((col) => col.key !== effectiveTitleKey);
+    const detailColumns = columns.filter(
+      (col) => col.key !== effectiveTitleKey,
+    );
 
     return (
-      <ul className={styles.cardList}>
-        {rows.map((row) => (
-          <li key={row.id} className={styles.card}>
-            <div className={styles.cardTitle}>
-              {titleColumn?.render ? titleColumn.render(row) : row[effectiveTitleKey]}
-            </div>
-
-            {detailColumns.length > 0 && (
-              <div className={styles.cardDetails}>
-                {detailColumns.map((col) => (
-                  <div key={col.key} className={styles.cardRow}>
-                    <span className={styles.cardLabel}>{col.header}</span>
-                    <span className={styles.cardValue}>
-                      {col.render ? col.render(row) : row[col.key]}
-                    </span>
-                  </div>
-                ))}
+      <>
+        <ul className={styles.cardList}>
+          {rows.map((row) => (
+            <li key={row.id} className={styles.card}>
+              <div className={styles.cardTitle}>
+                {titleColumn?.render
+                  ? titleColumn.render(row)
+                  : row[effectiveTitleKey]}
               </div>
-            )}
 
-            {renderActions && <div className={styles.cardActions}>{renderActions(row)}</div>}
-          </li>
-        ))}
-      </ul>
+              {detailColumns.length > 0 && (
+                <div className={styles.cardDetails}>
+                  {detailColumns.map((col) => (
+                    <div key={col.key} className={styles.cardRow}>
+                      <span className={styles.cardLabel}>{col.header}</span>
+
+                      <span className={styles.cardValue}>
+                        {col.render ? col.render(row) : row[col.key]}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {renderActions && (
+                <div className={styles.cardActions}>{renderActions(row)}</div>
+              )}
+            </li>
+          ))}
+        </ul>
+
+        {pagination}
+      </>
     );
   }
 
   return (
-    <div className={styles.tableWrap}>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            {columns.map((col) => (
-              <th key={col.key}>{col.header}</th>
-            ))}
-            {renderActions && <th className={styles.actionsHeader}>Actions</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr key={row.id}>
+    <>
+      <div className={styles.tableWrap}>
+        <table className={styles.table}>
+          <thead>
+            <tr>
               {columns.map((col) => (
-                <td key={col.key}>{col.render ? col.render(row) : row[col.key]}</td>
+                <th key={col.key}>{col.header}</th>
               ))}
-              {renderActions && <td className={styles.actionsCell}>{renderActions(row)}</td>}
+
+              {renderActions && (
+                <th className={styles.actionsHeader}>Actions</th>
+              )}
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.id}>
+                {columns.map((col) => (
+                  <td key={col.key}>
+                    {col.render ? col.render(row) : row[col.key]}
+                  </td>
+                ))}
+
+                {renderActions && (
+                  <td className={styles.actionsCell}>{renderActions(row)}</td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {pagination}
+    </>
   );
 }

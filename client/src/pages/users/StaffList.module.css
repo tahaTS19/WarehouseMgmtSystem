@@ -39,6 +39,37 @@
   background: var(--color-primary-hover);
 }
 
+.filters {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.select {
+  min-width: 180px;
+
+  padding: var(--space-3) var(--space-4);
+
+  background: var(--color-surface);
+  color: var(--color-ink);
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+
+  cursor: pointer;
+
+  transition: border-color 0.1s ease;
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
 .actions {
   display: flex;
   gap: var(--space-2);
@@ -49,12 +80,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
   width: 32px;
   height: 32px;
+
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
+
   background: var(--color-surface);
   color: var(--color-ink-soft);
+
   cursor: pointer;
 }
 
@@ -69,22 +104,17 @@
   border-color: var(--color-danger);
 }
 
-/* ---- Mobile: desktop layout stays untouched above this point ---- */
+/* ---------- Mobile ---------- */
+
 @media (max-width: 640px) {
   .title {
     font-size: 1.375rem;
   }
 
-  /* Leaves room at the bottom so the fixed FAB never sits on top of the
-     last row of content when scrolled all the way down. */
   .page {
     padding-bottom: calc(56px + var(--space-6) + var(--space-4));
   }
 
-  /* The button leaves the header entirely and becomes a floating action
-     button (fixed to the bottom-right corner) instead — a full-width bar
-     across the whole screen is a heavy, blocky pattern; a small circular
-     FAB is the standard, lighter-weight mobile convention for "add new". */
   .header {
     align-items: center;
   }
@@ -93,22 +123,33 @@
     position: fixed;
     right: var(--space-4);
     bottom: var(--space-6);
+
     width: 56px;
     height: 56px;
     padding: 0;
+
     border-radius: 50%;
+
     box-shadow: 0 4px 14px rgba(27, 36, 48, 0.28);
+
     z-index: 30;
   }
 
-  /* Icon only in the FAB — the label becomes the aria-label instead */
   .addButtonLabel {
     display: none;
   }
 
-  /* 32px is under the ~44px minimum comfortable tap target on a touch
-     screen — bump it up, this also affects the same buttons rendered
-     inside DataTable's mobile cards, since they share this class. */
+  .filters {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  /* .searchBar, */
+  .select {
+    width: 100%;
+    min-width: 0;
+  }
+
   .iconButton {
     width: 40px;
     height: 40px;

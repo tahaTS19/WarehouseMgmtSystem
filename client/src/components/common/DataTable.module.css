@@ -137,3 +137,74 @@
   padding-top: var(--space-3);
   border-top: 1px solid var(--color-border);
 }
+
+/* pagination */
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+
+  margin-top: var(--space-5);
+
+  font-family: var(--font-body);
+}
+
+.pageButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 96px;
+
+  padding: var(--space-2) var(--space-4);
+
+  background: var(--color-surface);
+  color: var(--color-ink);
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+
+  font-size: 0.875rem;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.pageButton:hover:not(:disabled) {
+  background: var(--color-canvas);
+  border-color: var(--color-primary);
+}
+
+.pageButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.pageInfo {
+  color: var(--color-ink-soft);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .pagination {
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .pageButton {
+    min-width: 88px;
+  }
+
+  .pageInfo {
+    width: 100%;
+    text-align: center;
+  }
+}

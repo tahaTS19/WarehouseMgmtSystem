@@ -48,23 +48,41 @@ describe("WarehousesController", () => {
     expect(result).toEqual({ id: "wh-1", companyId: "company-1", ...dto });
   });
 
-  it("delegates findAll to service with companyId", async () => {
+  it("delegates findAll to service with query parameters", async () => {
     const mockReq = { user: { companyId: "company-1" } } as any;
-    mockWarehousesService.findAllByCompany.mockResolvedValue([
-      { id: "wh-1", name: "Main" },
-    ]);
 
     const mockQuery = {
-      search: undefined,
+      search: "main",
+      page: 2,
+      limit: 10,
+      all: false,
     };
+
+    mockWarehousesService.findAllByCompany.mockResolvedValue({
+      data: [{ id: "wh-1", name: "Main" }],
+      page: 2,
+      limit: 10,
+      total: 1,
+      totalPages: 1,
+    });
 
     const result = await controller.findAll(mockReq, mockQuery);
 
     expect(service.findAllByCompany).toHaveBeenCalledWith(
       "company-1",
-      undefined,
+      "main",
+      2,
+      10,
+      false,
     );
-    expect(result).toHaveLength(1);
+
+    expect(result).toEqual({
+      data: [{ id: "wh-1", name: "Main" }],
+      page: 2,
+      limit: 10,
+      total: 1,
+      totalPages: 1,
+    });
   });
 
   it("delegates findOne to service with companyId and warehouse id", async () => {
@@ -98,5 +116,33 @@ describe("WarehousesController", () => {
     await controller.remove(mockReq, "wh-1");
 
     expect(service.remove).toHaveBeenCalledWith("company-1", "wh-1");
+  });
+
+  it("passes all=true to the service", async () => {
+    const mockReq = { user: { companyId: "company-1" } } as any;
+
+    const mockQuery = {
+      search: undefined,
+      page: 1,
+      limit: 10,
+      all: true,
+    };
+
+    mockWarehousesService.findAllByCompany.mockResolvedValue([
+      { id: "wh-1" },
+      { id: "wh-2" },
+    ]);
+
+    const result = await controller.findAll(mockReq, mockQuery);
+
+    expect(service.findAllByCompany).toHaveBeenCalledWith(
+      "company-1",
+      undefined,
+      1,
+      10,
+      true,
+    );
+
+    expect(result).toHaveLength(2);
   });
 });
