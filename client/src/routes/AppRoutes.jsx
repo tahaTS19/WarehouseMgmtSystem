@@ -8,6 +8,8 @@ import WarehousesList from '../pages/warehouses/WarehousesList';
 import WarehouseForm from '../pages/warehouses/WarehouseForm';
 import StaffList from '../pages/users/StaffList';
 import StaffForm from '../pages/users/StaffForm';
+import CategoriesList from '../pages/categories/CategoriesList';
+import CategoryForm from '../pages/categories/CategoryForm';
 
 export default function AppRoutes() {
   return (
@@ -33,6 +35,10 @@ export default function AppRoutes() {
             <Route path="/employees" element={<StaffList />} />
             <Route path="/employees/new" element={<StaffForm />} />
             <Route path="/employees/:id/edit" element={<StaffForm />} />
+
+            <Route path="/categories" element={<CategoriesList />} />
+            <Route path="/categories/new" element={<CategoryForm />} />
+            <Route path="/categories/:id/edit" element={<CategoryForm />} />
           </Route>
         </Route>
       </Route>

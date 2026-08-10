@@ -208,3 +208,12 @@
     text-align: center;
   }
 }
+
+.cardSubtitle {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--color-ink-soft);
+  text-align: left;
+  overflow-wrap: anywhere;
+}
