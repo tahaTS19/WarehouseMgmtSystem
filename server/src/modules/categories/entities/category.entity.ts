@@ -7,6 +7,7 @@ import {
   ManyToOne,
   JoinColumn,
   OneToMany,
+  Unique
 } from 'typeorm';
 import { Company } from '../../companies/entities/company.entity';
 import { Product } from '../../products/entities/product.entity';
@@ -15,6 +16,7 @@ import { Product } from '../../products/entities/product.entity';
 // catalog organization. Two companies both having a "Footwear" category are two
 // completely independent rows, never shared.
 @Entity('categories')
+@Unique(['companyId', 'name']) //fix
 export class Category {
   @PrimaryGeneratedColumn('uuid')
   id: string;
