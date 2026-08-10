@@ -1,13 +1,18 @@
 import { useIsMobile } from "./useIsMobile";
 import styles from "./DataTable.module.css";
-
+ 
 /**
  * columns: [{ key, header, render?(row) }]
  * rows: array of objects, each needs an `id`
  * renderActions?(row): JSX for row actions (edit/delete buttons etc.)
  * titleKey?: which column's value becomes the card's title on mobile —
- *   defaults to the first column. Every other column renders as a
- *   label:value row inside the card.
+ *   defaults to the first column.
+ * subtitleKey?: OPTIONAL — a column whose value renders as a plain,
+ *   left-aligned line directly under the title (no label, not part of the
+ *   label:value detail rows). Use this for free-text fields like a
+ *   description, where "Description: <right-aligned text>" reads oddly.
+ *   Everything else (not titleKey or subtitleKey) renders as a normal
+ *   label:value detail row.
  */
 export default function DataTable({
   columns,
@@ -18,21 +23,22 @@ export default function DataTable({
   onEmptyAction,
   renderActions,
   titleKey,
+  subtitleKey,
   page,
   totalPages,
   onPageChange,
 }) {
   const isMobile = useIsMobile();
-
+ 
   if (isLoading) {
     return <p className={styles.status}>Loading…</p>;
   }
-
+ 
   if (!rows || rows.length === 0) {
     return (
       <div className={styles.emptyState}>
         <p>{emptyMessage}</p>
-
+ 
         {onEmptyAction && emptyActionLabel && (
           <button
             type="button"
@@ -45,7 +51,7 @@ export default function DataTable({
       </div>
     );
   }
-
+ 
   const pagination =
     totalPages > 1 ? (
       <div className={styles.pagination}>
@@ -57,11 +63,11 @@ export default function DataTable({
         >
           Previous
         </button>
-
+ 
         <span className={styles.pageInfo}>
           Page {page} of {totalPages}
         </span>
-
+ 
         <button
           type="button"
           className={styles.pageButton}
@@ -72,14 +78,17 @@ export default function DataTable({
         </button>
       </div>
     ) : null;
-
+ 
   if (isMobile) {
     const effectiveTitleKey = titleKey ?? columns[0]?.key;
     const titleColumn = columns.find((col) => col.key === effectiveTitleKey);
+    const subtitleColumn = subtitleKey
+      ? columns.find((col) => col.key === subtitleKey)
+      : null;
     const detailColumns = columns.filter(
-      (col) => col.key !== effectiveTitleKey,
+      (col) => col.key !== effectiveTitleKey && col.key !== subtitleKey,
     );
-
+ 
     return (
       <>
         <ul className={styles.cardList}>
@@ -90,13 +99,21 @@ export default function DataTable({
                   ? titleColumn.render(row)
                   : row[effectiveTitleKey]}
               </div>
-
+ 
+              {subtitleColumn && (
+                <p className={styles.cardSubtitle}>
+                  {subtitleColumn.render
+                    ? subtitleColumn.render(row)
+                    : row[subtitleColumn.key]}
+                </p>
+              )}
+ 
               {detailColumns.length > 0 && (
                 <div className={styles.cardDetails}>
                   {detailColumns.map((col) => (
                     <div key={col.key} className={styles.cardRow}>
                       <span className={styles.cardLabel}>{col.header}</span>
-
+ 
                       <span className={styles.cardValue}>
                         {col.render ? col.render(row) : row[col.key]}
                       </span>
@@ -104,19 +121,19 @@ export default function DataTable({
                   ))}
                 </div>
               )}
-
+ 
               {renderActions && (
                 <div className={styles.cardActions}>{renderActions(row)}</div>
               )}
             </li>
           ))}
         </ul>
-
+ 
         {pagination}
       </>
     );
   }
-
+ 
   return (
     <>
       <div className={styles.tableWrap}>
@@ -126,13 +143,13 @@ export default function DataTable({
               {columns.map((col) => (
                 <th key={col.key}>{col.header}</th>
               ))}
-
+ 
               {renderActions && (
                 <th className={styles.actionsHeader}>Actions</th>
               )}
             </tr>
           </thead>
-
+ 
           <tbody>
             {rows.map((row) => (
               <tr key={row.id}>
@@ -141,7 +158,7 @@ export default function DataTable({
                     {col.render ? col.render(row) : row[col.key]}
                   </td>
                 ))}
-
+ 
                 {renderActions && (
                   <td className={styles.actionsCell}>{renderActions(row)}</td>
                 )}
@@ -150,7 +167,7 @@ export default function DataTable({
           </tbody>
         </table>
       </div>
-
+ 
       {pagination}
     </>
   );
