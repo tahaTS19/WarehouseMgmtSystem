@@ -63,7 +63,7 @@ export default function StaffList() {
 
       setStaff(usersData.data);
       setTotalPages(usersData.totalPages);
-      setWarehouses(warehousesData);
+      setWarehouses(warehousesData.data);
     } catch (err) {
       toast.error(getErrorMessage(err, "Could not load staff."));
     } finally {

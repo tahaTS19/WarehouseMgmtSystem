@@ -31,7 +31,7 @@ export class WarehousesService {
     page = 1,
     limit = 10,
     all = false,
-  ): Promise<PaginatedResponse<Warehouse> | Warehouse[]> {
+  ): Promise<PaginatedResponse<Warehouse>> {
     const query = this.warehouseRepository
       .createQueryBuilder("warehouse")
       .where("warehouse.companyId = :companyId", { companyId });
@@ -47,9 +47,16 @@ export class WarehousesService {
 
     query.orderBy("warehouse.createdAt", "DESC");
 
-    if (all) {
-      return query.getMany();
-    }
+  //   if (all) {
+  //   const data = await query.getMany();
+  //   return {
+  //     data,
+  //     page: 1,
+  //     limit: data.length,
+  //     total: data.length,
+  //     totalPages: 1,
+  //   };
+  // }
 
     query.skip((page - 1) * limit).take(limit);
 
