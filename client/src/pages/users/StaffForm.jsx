@@ -32,7 +32,7 @@ export default function StaffForm() {
         ]);
         if (!isMounted) return;
 
-        setWarehouses(warehousesData);
+        setWarehouses(warehousesData.data);
         if (userData) {
           setName(userData.name ?? '');
           setEmail(userData.email ?? '');
