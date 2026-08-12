@@ -47,16 +47,16 @@ export class WarehousesService {
 
     query.orderBy("warehouse.createdAt", "DESC");
 
-  //   if (all) {
-  //   const data = await query.getMany();
-  //   return {
-  //     data,
-  //     page: 1,
-  //     limit: data.length,
-  //     total: data.length,
-  //     totalPages: 1,
-  //   };
-  // }
+    if (all) {
+    const data = await query.getMany();
+    return {
+      data,
+      page: 1,
+      limit: data.length,
+      total: data.length,
+      totalPages: 1,
+    };
+  }
 
     query.skip((page - 1) * limit).take(limit);
 
