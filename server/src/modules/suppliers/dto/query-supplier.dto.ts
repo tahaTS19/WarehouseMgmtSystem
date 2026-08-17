@@ -1,10 +1,14 @@
-import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsInt, IsOptional, IsString, Max, Min } from "class-validator";
+import { Type } from "class-transformer";
 
 export class QuerySupplierDto {
   @IsOptional()
   @IsString()
   search?: string;
+
+  @IsOptional()
+  @IsString()
+  companyName?: string;
 
   @IsOptional()
   @Type(() => Number)
