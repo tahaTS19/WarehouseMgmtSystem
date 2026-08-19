@@ -10,14 +10,23 @@
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 async function request(endpoint, { method = "GET", body, headers = {} } = {}) {
+  // FormData (multipart file uploads) must NOT be JSON.stringify'd — that
+  // produces "{}" since FormData has no enumerable own properties, silently
+  // dropping the actual file. It also must NOT get a manual Content-Type —
+  // the browser has to generate that itself, including the multipart
+  // boundary string, which only it can compute correctly.
+  const isFormData = typeof FormData !== "undefined" && body instanceof FormData;
+
   const res = await fetch(`${BASE_URL}${endpoint}`, {
     method,
-    headers: {
-      "Content-Type": "application/json",
-      ...headers,
-    },
+    headers: isFormData
+      ? { ...headers }
+      : {
+          "Content-Type": "application/json",
+          ...headers,
+        },
     credentials: "include", // sends the httpOnly auth cookie automatically
-    body: body ? JSON.stringify(body) : undefined,
+    body: isFormData ? body : body ? JSON.stringify(body) : undefined,
   });
 
   let data;
