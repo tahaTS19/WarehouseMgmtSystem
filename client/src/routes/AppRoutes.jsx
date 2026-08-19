@@ -12,6 +12,8 @@ import CategoriesList from '../pages/categories/CategoriesList';
 import CategoryForm from '../pages/categories/CategoryForm';
 import SuppliersList from '../pages/suppliers/SuppliersList';
 import SupplierForm from '../pages/suppliers/SupplierForm';
+import ProductsList from '../pages/products/ProductsList';
+import ProductForm from '../pages/products/ProductForm';
 
 export default function AppRoutes() {
   return (
@@ -45,6 +47,10 @@ export default function AppRoutes() {
             <Route path="/suppliers" element={<SuppliersList />} />
             <Route path="/suppliers/new" element={<SupplierForm />} />
             <Route path="/suppliers/:id/edit" element={<SupplierForm />} />
+
+            <Route path="/products" element={<ProductsList />} />
+            <Route path="/products/new" element={<ProductForm />} />
+            <Route path="/products/:id/edit" element={<ProductForm />} />
           </Route>
         </Route>
       </Route>
