@@ -129,7 +129,7 @@ export class DashboardService {
       .where('warehouse.companyId = :companyId', { companyId })
       .orderBy('transaction.createdAt', 'DESC')
       .take(RECENT_TRANSACTIONS_LIMIT)
-      .getRawMany();
+      .getMany();
   }
 
   private async getTransactionsTodayCountForWarehouse(warehouseId: string): Promise<number> {
