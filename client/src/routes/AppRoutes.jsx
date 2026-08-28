@@ -14,6 +14,8 @@ import SuppliersList from '../pages/suppliers/SuppliersList';
 import SupplierForm from '../pages/suppliers/SupplierForm';
 import ProductsList from '../pages/products/ProductsList';
 import ProductForm from '../pages/products/ProductForm';
+import TransactionsList from '../pages/transactions/TransactionsList';
+import TransactionForm from '../pages/transactions/TransactionForm';
 
 export default function AppRoutes() {
   return (
@@ -52,6 +54,12 @@ export default function AppRoutes() {
             <Route path="/products/new" element={<ProductForm />} />
             <Route path="/products/:id/edit" element={<ProductForm />} />
           </Route>
+
+          {/* Transactions are ADMIN, STAFF per the doc — not nested under
+              the admin-only ProtectedRoute above. No :id/edit route at all:
+              this module is create + list/view only, immutable audit log. */}
+          <Route path="/transactions" element={<TransactionsList />} />
+          <Route path="/transactions/new" element={<TransactionForm />} />
         </Route>
       </Route>
 

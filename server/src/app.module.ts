@@ -11,7 +11,7 @@ import { ProductsModule } from './modules/products/products.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { SuppliersModule } from './modules/suppliers/suppliers.module';
 import { WarehouseInventoryModule } from './modules/warehouse-inventory/warehouse-inventory.module';
-// import { TransactionsModule } from './modules/transactions/transactions.module';
+import { TransactionsModule } from './modules/transactions/transactions.module';
 // import { DashboardModule } from './modules/dashboard/dashboard.module';
 // import { ReportsModule } from './modules/reports/reports.module';
 
@@ -43,7 +43,7 @@ import { WarehouseInventoryModule } from './modules/warehouse-inventory/warehous
     CategoriesModule,
     SuppliersModule,
     WarehouseInventoryModule,
-    // TransactionsModule,
+    TransactionsModule,
     // ReportsModule,
   ],
 })
