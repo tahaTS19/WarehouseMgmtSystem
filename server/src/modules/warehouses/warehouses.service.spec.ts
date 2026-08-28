@@ -113,12 +113,19 @@ describe("WarehousesService", () => {
         true,
       );
 
-      expect(qb.getMany).toHaveBeenCalled();
-
       expect(qb.skip).not.toHaveBeenCalled();
       expect(qb.take).not.toHaveBeenCalled();
 
-      expect(result).toEqual([{ id: "wh-1" }, { id: "wh-2" }]);
+      // Must be the SAME envelope shape as the paginated path, not a raw array —
+      // this exact mismatch caused a real frontend crash previously.
+      expect(result).toEqual({
+        data: [{ id: "wh-1" }, { id: "wh-2" }],
+        page: 1,
+        limit: 2,
+        total: 2,
+        totalPages: 1,
+      });
+      expect(Array.isArray(result)).toBe(false);
     });
 
     it("applies search filter", async () => {
