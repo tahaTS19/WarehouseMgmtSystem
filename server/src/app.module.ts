@@ -9,7 +9,7 @@ import { WarehousesModule } from './modules/warehouses/warehouses.module';
 import { UsersModule } from './modules/users/users.module';
 // import { ProductsModule } from './modules/products/products.module';
 import { CategoriesModule } from './modules/categories/categories.module';
-// import { SuppliersModule } from './modules/suppliers/suppliers.module';
+import { SuppliersModule } from './modules/suppliers/suppliers.module';
 // import { TransactionsModule } from './modules/transactions/transactions.module';
 // import { DashboardModule } from './modules/dashboard/dashboard.module';
 // import { ReportsModule } from './modules/reports/reports.module';
@@ -40,7 +40,7 @@ import { CategoriesModule } from './modules/categories/categories.module';
     UsersModule,
     // ProductsModule,
     CategoriesModule,
-    // SuppliersModule,
+    SuppliersModule,
     // TransactionsModule,
     // ReportsModule,
   ],

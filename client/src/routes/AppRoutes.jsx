@@ -10,6 +10,8 @@ import StaffList from '../pages/users/StaffList';
 import StaffForm from '../pages/users/StaffForm';
 import CategoriesList from '../pages/categories/CategoriesList';
 import CategoryForm from '../pages/categories/CategoryForm';
+import SuppliersList from '../pages/suppliers/SuppliersList';
+import SupplierForm from '../pages/suppliers/SupplierForm';
 
 export default function AppRoutes() {
   return (
@@ -39,6 +41,10 @@ export default function AppRoutes() {
             <Route path="/categories" element={<CategoriesList />} />
             <Route path="/categories/new" element={<CategoryForm />} />
             <Route path="/categories/:id/edit" element={<CategoryForm />} />
+
+            <Route path="/suppliers" element={<SuppliersList />} />
+            <Route path="/suppliers/new" element={<SupplierForm />} />
+            <Route path="/suppliers/:id/edit" element={<SupplierForm />} />
           </Route>
         </Route>
       </Route>
