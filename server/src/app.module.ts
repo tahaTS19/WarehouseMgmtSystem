@@ -7,7 +7,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { WarehousesModule } from './modules/warehouses/warehouses.module';
 import { UsersModule } from './modules/users/users.module';
-// import { ProductsModule } from './modules/products/products.module';
+import { ProductsModule } from './modules/products/products.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { SuppliersModule } from './modules/suppliers/suppliers.module';
 // import { TransactionsModule } from './modules/transactions/transactions.module';
@@ -38,7 +38,7 @@ import { SuppliersModule } from './modules/suppliers/suppliers.module';
     DashboardModule,
     WarehousesModule,
     UsersModule,
-    // ProductsModule,
+    ProductsModule,
     CategoriesModule,
     SuppliersModule,
     // TransactionsModule,

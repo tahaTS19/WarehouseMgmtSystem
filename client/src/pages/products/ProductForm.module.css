@@ -1,0 +1,260 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: 480px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+}
+
+.textareaGroup,
+.selectGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.textareaLabel,
+.selectLabel {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.textarea {
+  width: 100%;
+  min-height: 96px;
+  max-height: 220px;
+  resize: vertical;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--color-ink);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.charCount {
+  align-self: flex-end;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--color-ink-soft);
+}
+
+.select {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  color: var(--color-ink);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.actionsRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.cancelButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  color: var(--color-ink-soft);
+  cursor: pointer;
+}
+
+.cancelButton:hover {
+  background: var(--color-canvas);
+}
+
+.submitButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary);
+  color: var(--color-surface);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.status {
+  font-family: var(--font-body);
+  color: var(--color-ink-soft);
+  padding: var(--space-6);
+}
+
+.imageGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.imageLabel {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.imagePreviewWrap {
+  width: 100%;
+  max-width: 200px;
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border);
+}
+
+.imagePreview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-ink-soft);
+}
+
+.imageActions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.imagePickButton {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+.imagePickButton:hover {
+  background: var(--color-canvas);
+}
+
+.imageRemoveButton {
+  background: none;
+  border: none;
+  color: var(--color-danger);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: var(--space-2) var(--space-3);
+}
+
+.imageRemoveButton:hover {
+  text-decoration: underline;
+}
+
+.hiddenFileInput {
+  display: none;
+}
+
+.fieldError {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  color: var(--color-danger);
+}
+
+/* ---- Mobile: desktop layout stays untouched above this point ---- */
+@media (max-width: 640px) {
+  .page {
+    max-width: 100%;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .form {
+    padding: var(--space-4);
+    gap: var(--space-4);
+    border-radius: var(--radius-sm);
+  }
+
+  .select {
+    min-height: 44px;
+  }
+
+  .actionsRow {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: var(--space-2);
+    margin-top: 0;
+  }
+
+  .cancelButton {
+    border: none;
+    text-decoration: underline;
+    padding: var(--space-2);
+  }
+
+  .cancelButton,
+  .submitButton {
+    width: 100%;
+    min-height: 44px;
+    font-size: 1rem;
+  }
+}
