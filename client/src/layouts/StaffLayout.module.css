@@ -1,0 +1,147 @@
+.shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--color-canvas);
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  padding: var(--space-6) var(--space-4);
+}
+
+.sidebarTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-ink);
+  padding: 0 var(--space-2);
+}
+
+/* Hidden on desktop — the full nav is always visible there, so there's
+   nothing for this button to toggle. */
+.menuToggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--color-ink);
+  cursor: pointer;
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.menuToggle:hover {
+  background: var(--color-canvas);
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--color-ink-soft);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.navLink:hover {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+}
+
+.navLinkActive {
+  background: var(--color-canvas);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* Lives inside <nav> now (last item) — margin-top: auto keeps it pinned to
+   the bottom of the sidebar on desktop, same as when it was a separate
+   sibling element before. */
+.sidebarFooter {
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.content {
+  flex: 1;
+  padding: var(--space-8);
+  overflow-y: auto;
+}
+
+/* Below tablet width: the fixed 240px sidebar leaves almost no room for
+   content. The sidebar becomes a slim top bar (brand + hamburger button),
+   and the full labeled nav — including logout — becomes a dropdown panel
+   toggled open/closed, rather than cramming icon-only links into a strip. */
+@media (max-width: 768px) {
+  .shell {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .sidebar {
+    position: relative;
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .sidebarTop {
+    margin-bottom: 0;
+  }
+
+  .menuToggle {
+    display: flex;
+  }
+
+  .nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-2) var(--space-4) var(--space-4);
+    box-shadow: 0 6px 16px rgba(27, 36, 48, 0.12);
+    z-index: 20;
+  }
+
+  .navOpen {
+    display: flex;
+  }
+
+  .sidebarFooter {
+    margin-top: var(--space-2);
+  }
+
+  .content {
+    padding: var(--space-4);
+  }
+}

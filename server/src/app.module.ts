@@ -3,13 +3,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 // Feature modules will be imported here as we build them, e.g.:
-// import { AuthModule } from './modules/auth/auth.module';
-// import { WarehousesModule } from './modules/warehouses/warehouses.module';
-// import { UsersModule } from './modules/users/users.module';
-// import { ProductsModule } from './modules/products/products.module';
-// import { CategoriesModule } from './modules/categories/categories.module';
-// import { SuppliersModule } from './modules/suppliers/suppliers.module';
-// import { TransactionsModule } from './modules/transactions/transactions.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { WarehousesModule } from './modules/warehouses/warehouses.module';
+import { UsersModule } from './modules/users/users.module';
+import { ProductsModule } from './modules/products/products.module';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { SuppliersModule } from './modules/suppliers/suppliers.module';
+import { WarehouseInventoryModule } from './modules/warehouse-inventory/warehouse-inventory.module';
+import { TransactionsModule } from './modules/transactions/transactions.module';
 // import { DashboardModule } from './modules/dashboard/dashboard.module';
 // import { ReportsModule } from './modules/reports/reports.module';
 
@@ -33,14 +35,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
 
     // Feature modules go here as they're built, sprint by sprint:
-    // AuthModule,
-    // WarehousesModule,
-    // UsersModule,
-    // ProductsModule,
-    // CategoriesModule,
-    // SuppliersModule,
-    // TransactionsModule,
-    // DashboardModule,
+    AuthModule,
+    DashboardModule,
+    WarehousesModule,
+    UsersModule,
+    ProductsModule,
+    CategoriesModule,
+    SuppliersModule,
+    WarehouseInventoryModule,
+    TransactionsModule,
     // ReportsModule,
   ],
 })

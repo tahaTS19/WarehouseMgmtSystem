@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -9,6 +10,9 @@ async function bootstrap() {
     origin: process.env.CLIENT_URL || 'http://localhost:5173',
     credentials: true,
   });
+
+  // Required so JwtStrategy can read the httpOnly auth cookie off incoming requests
+  app.use(cookieParser());
 
   // Strips unknown properties and validates incoming DTOs on every request
   app.useGlobalPipes(

@@ -1,0 +1,110 @@
+.page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 860px) {
+  .page {
+    grid-template-columns: 420px 1fr;
+  }
+}
+
+.panel {
+  display: none;
+  background: linear-gradient(165deg, #1b2430 0%, #223349 100%);
+  padding: var(--space-8) var(--space-7);
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 860px) {
+  .panel {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.panelContent {
+  position: relative;
+  z-index: 1;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 0.06em;
+  color: #f6f6f3;
+  margin-bottom: var(--space-7);
+}
+
+.signature {
+  margin-bottom: var(--space-6);
+  display: block;
+}
+
+.cell {
+  fill: none;
+  stroke: rgba(246, 246, 243, 0.28);
+  stroke-width: 1.5;
+}
+
+.cellLit {
+  fill: var(--color-accent);
+  stroke: var(--color-accent);
+}
+
+.tagline {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 26px;
+  line-height: 1.25;
+  color: #f6f6f3;
+  margin: 0 0 var(--space-3);
+  max-width: 320px;
+}
+
+.taglineSub {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(246, 246, 243, 0.62);
+  max-width: 300px;
+  margin: 0;
+}
+
+.formSide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6) var(--space-5);
+}
+
+.formWrap {
+  width: 100%;
+  max-width: 380px;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: var(--space-3);
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--color-ink);
+  margin-bottom: var(--space-2);
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--color-ink-soft);
+  margin: 0 0 var(--space-6);
+  line-height: 1.5;
+}
