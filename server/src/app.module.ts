@@ -13,7 +13,7 @@ import { SuppliersModule } from './modules/suppliers/suppliers.module';
 import { WarehouseInventoryModule } from './modules/warehouse-inventory/warehouse-inventory.module';
 import { TransactionsModule } from './modules/transactions/transactions.module';
 // import { DashboardModule } from './modules/dashboard/dashboard.module';
-// import { ReportsModule } from './modules/reports/reports.module';
+import { ReportsModule } from './modules/reports/reports.module';
 
 @Module({
   imports: [
@@ -44,7 +44,7 @@ import { TransactionsModule } from './modules/transactions/transactions.module';
     SuppliersModule,
     WarehouseInventoryModule,
     TransactionsModule,
-    // ReportsModule,
+    ReportsModule,
   ],
 })
 export class AppModule {}
