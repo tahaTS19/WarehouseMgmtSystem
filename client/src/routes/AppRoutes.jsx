@@ -1,21 +1,22 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Login from '../pages/auth/Login';
-import Register from '../pages/auth/Register';
-import ProtectedRoute from './ProtectedRoute';
-import RoleLayout from '../layouts/RoleLayout';
-import Dashboard from '../pages/dashboard/Dashboard';
-import WarehousesList from '../pages/warehouses/WarehousesList';
-import WarehouseForm from '../pages/warehouses/WarehouseForm';
-import StaffList from '../pages/users/StaffList';
-import StaffForm from '../pages/users/StaffForm';
-import CategoriesList from '../pages/categories/CategoriesList';
-import CategoryForm from '../pages/categories/CategoryForm';
-import SuppliersList from '../pages/suppliers/SuppliersList';
-import SupplierForm from '../pages/suppliers/SupplierForm';
-import ProductsList from '../pages/products/ProductsList';
-import ProductForm from '../pages/products/ProductForm';
-import TransactionsList from '../pages/transactions/TransactionsList';
-import TransactionForm from '../pages/transactions/TransactionForm';
+import { Routes, Route, Navigate } from "react-router-dom";
+import Login from "../pages/auth/Login";
+import Register from "../pages/auth/Register";
+import ProtectedRoute from "./ProtectedRoute";
+import RoleLayout from "../layouts/RoleLayout";
+import Dashboard from "../pages/dashboard/Dashboard";
+import WarehousesList from "../pages/warehouses/WarehousesList";
+import WarehouseForm from "../pages/warehouses/WarehouseForm";
+import StaffList from "../pages/users/StaffList";
+import StaffForm from "../pages/users/StaffForm";
+import CategoriesList from "../pages/categories/CategoriesList";
+import CategoryForm from "../pages/categories/CategoryForm";
+import SuppliersList from "../pages/suppliers/SuppliersList";
+import SupplierForm from "../pages/suppliers/SupplierForm";
+import ProductsList from "../pages/products/ProductsList";
+import ProductForm from "../pages/products/ProductForm";
+import TransactionsList from "../pages/transactions/TransactionsList";
+import TransactionForm from "../pages/transactions/TransactionForm";
+import ReportsPage from '../pages/reports/ReportsPage';
 
 export default function AppRoutes() {
   return (
@@ -30,7 +31,7 @@ export default function AppRoutes() {
           {/* Admin-only branch — nesting ProtectedRoute again adds the role
               check on top of "just logged in". Staff hitting these URLs
               directly get redirected by ProtectedRoute's allowedRoles check. */}
-          <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+          <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
             <Route path="/warehouses" element={<WarehousesList />} />
             <Route path="/warehouses/new" element={<WarehouseForm />} />
             <Route path="/warehouses/:id/edit" element={<WarehouseForm />} />
@@ -53,6 +54,8 @@ export default function AppRoutes() {
             <Route path="/products" element={<ProductsList />} />
             <Route path="/products/new" element={<ProductForm />} />
             <Route path="/products/:id/edit" element={<ProductForm />} />
+            {/* Reports is Admin-only, company-wide — Staff never sees this page or its nav link at all. */}
+            <Route path="/reports" element={<ReportsPage />} />
           </Route>
 
           {/* Transactions are ADMIN, STAFF per the doc — not nested under
